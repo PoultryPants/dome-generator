@@ -1,4 +1,4 @@
-## Dome Generator — Minecraft slabs & stairs
+## Dome Generator | Minecraft slabs & stairs
 
 Try it online: https://poultrypants.github.io/dome-generator/
 
