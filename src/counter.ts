@@ -25,7 +25,7 @@ export const minecraftBlocks: BlockShape[] = [
     [[[true, false], [true, true]], [[true, false], [true, false]]], // OuterCornerStair2
     [[[true, false], [true, false]], [[true, false], [true, true]]], // OuterCornerStair3
     [[[true, false], [true, false]], [[true, true], [true, false]]], // OuterCornerStair4
-    [[[true, true], [false, true]], [[false, true], [false, true]]], // OuterCornerStair1 -` upside down
+    [[[true, true], [false, true]], [[false, true], [false, true]]], // OuterCornerStair1 - upside down
     [[[false, true], [false, true]], [[true, true], [false, true]]], // OuterCornerStair2 - upside down
     [[[false, true], [true, true]], [[false, true], [false, true]]], // OuterCornerStair3 - upside down
     [[[false, true], [false, true]], [[false, true], [true, true]]], // OuterCornerStair4 - upside down

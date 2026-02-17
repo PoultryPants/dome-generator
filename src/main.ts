@@ -1,4 +1,4 @@
-import './style.css'
+/* import './style.css' */
 import { IsometricCanvas } from './render.ts';
 import { get_sphere } from './sphere.ts';
 import { type BlockShape, type Coords3d} from './counter.ts'
@@ -17,13 +17,61 @@ const label_radius = document.getElementById('label-radius') as HTMLLabelElement
 const slider_cut = document.getElementById('slider-cut') as HTMLInputElement;
 const label_cut = document.getElementById('label-cut') as HTMLLabelElement;
 
-const cornerToggle = document.getElementById('corner-toggle') as HTMLInputElement;
+const slider_eccentricity = document.getElementById('slider-eccentricity') as HTMLInputElement;
+const label_eccentricity = document.getElementById('label-eccentricity') as HTMLLabelElement;
+
+const spheroid_type = document.getElementById('spheroid-type') as HTMLSelectElement;
+const cornerUse = document.getElementById('corner-use') as HTMLSelectElement;
+const ensureSymmetry = document.getElementById('ensure-symmetry') as HTMLInputElement;
+const eccentricityGroup = document.getElementById('eccentricity-group') as HTMLDivElement;
 var blocks: Array<[BlockShape, Coords3d]> = []
 var radius: number = 13
 var cut: number = 7
+var eccentricity: number = 0
 var isometric_canvas: IsometricCanvas = new IsometricCanvas(
     ctx, [0,0,0],[],["#933DF0", "#5F0EB5", "#C392F7"]
 )
+
+// utility functions
+
+type SpheroidType = "sphere" | "oblate" | "prolate";
+
+let SpheroidType: SpheroidType = "sphere";
+
+function computeCut(
+    radius: number,
+    spheroidType: SpheroidType,
+    eccentricity: number
+): number {
+    const e = Math.min(eccentricity / 100, 0.999);
+
+    let polarRadius: number;
+
+    if (spheroidType === "sphere") {
+        polarRadius = radius;
+    } 
+    else if (spheroidType === "oblate") {
+        polarRadius = radius * Math.sqrt(1 - e * e);
+    } 
+    else { // prolate
+        polarRadius = radius / Math.sqrt(1 - e * e);
+    }
+
+    return Math.floor(polarRadius / 2);
+}
+
+function computePolarRadius(
+    radius: number,
+    spheroidType: SpheroidType,
+    eccentricity: number
+): number {
+    const e = Math.min(eccentricity / 100, 0.999);
+    if (spheroidType === "sphere") return radius;
+    if (spheroidType === "oblate") return radius * Math.sqrt(1 - e * e);
+    // prolate
+    return radius / Math.sqrt(1 - e * e);
+}
+
 
 function read_slider_and_render(){
     if (!canvas) {
@@ -32,34 +80,78 @@ function read_slider_and_render(){
     if (!ctx) {
         throw new Error("Cannot build context");
     }
+    const polar = computePolarRadius(radius, SpheroidType, eccentricity);
     isometric_canvas = new IsometricCanvas(
         ctx,
-        [radius * 2, radius * 2, radius],
+        [radius * 2, radius * 2, Math.ceil(polar)],
         blocks,
         ["#933DF0", "#5F0EB5", "#C392F7"]
     )
+    // If the spheroid is taller than the base radius (prolate), shift the
+    // viewport up by half the additional height so the top becomes visible.
+    const extra = Math.max(0, polar - radius);
+    if (extra > 0) {
+        // world units -> pixels: one z-unit maps to ~`ratio` pixels vertically
+        isometric_canvas.origin[1] += (extra / 3.14) * isometric_canvas.ratio;
+    }
     isometric_canvas.render(cut=cut);
 }
 
 slider_radius.addEventListener('input', () => {
-    radius = parseInt(slider_radius.value);
-    cut = Math.floor(radius / 2)
-    label_cut.textContent = "Cut: " + cut.toString();
-    slider_cut.max = cut.toString();
-    slider_cut.value = cut.toString();
-    label_radius.textContent = "Radius: " + radius.toString();
-    blocks = get_sphere(radius, cornerToggle.checked)
-    read_slider_and_render()
+    radius = Number(slider_radius.value);
+
+    cut = computeCut(radius, SpheroidType, eccentricity);
+
+    slider_cut.max = String(cut);
+    slider_cut.value = String(cut);
+
+    label_cut.textContent = `Cut: ${cut}`;
+    label_radius.textContent = `Diameter: ${radius}`;
+
+    blocks = get_sphere(radius, cornerUse.value, SpheroidType, eccentricity, ensureSymmetry?.checked)
+    read_slider_and_render();
 });
 
+// user-adjustable cut
 slider_cut.addEventListener('input', () => {
-    cut = parseInt(slider_cut.value);
-    label_cut.textContent = "Cut: " + cut.toString();
+    cut = Number(slider_cut.value);
+    label_cut.textContent = `Cut: ${cut}`;
     isometric_canvas.render(cut=cut);
+});
+
+// eccentricity control
+slider_eccentricity.addEventListener('input', () => {
+    eccentricity = Number(slider_eccentricity.value);
+    label_eccentricity.textContent = `Eccentricity: ${(eccentricity/100).toFixed(2)}`;
+    // recompute cut limits based on new eccentricity
+    cut = computeCut(radius, SpheroidType, eccentricity);
+    slider_cut.max = String(cut);
+    slider_cut.value = String(cut);
+    label_cut.textContent = `Cut: ${cut}`;
+    blocks = get_sphere(radius, cornerUse.value, SpheroidType, eccentricity, ensureSymmetry?.checked);
+    read_slider_and_render();
+});
+
+spheroid_type.addEventListener('change', () => {
+    SpheroidType = spheroid_type.value as SpheroidType;
+    // show eccentricity control only for oblate/prolate
+    eccentricityGroup.style.display = SpheroidType === 'sphere' ? 'none' : 'flex';
+    // recompute cut limits for new spheroid type
+    cut = computeCut(radius, SpheroidType, eccentricity);
+    slider_cut.max = String(cut);
+    slider_cut.value = String(cut);
+    label_cut.textContent = `Cut: ${cut}`;
+    blocks = get_sphere(radius, cornerUse.value, SpheroidType, eccentricity, ensureSymmetry?.checked)
+    read_slider_and_render()
 })
 
-cornerToggle.addEventListener('input', () => {
-    blocks = get_sphere(radius, cornerToggle.checked)
+cornerUse.addEventListener('change', () => {
+    blocks = get_sphere(radius, cornerUse.value, SpheroidType, eccentricity, ensureSymmetry?.checked)
+    read_slider_and_render()
+})
+
+ensureSymmetry?.addEventListener('change', () => {
+    blocks = get_sphere(radius, cornerUse.value, SpheroidType, eccentricity, ensureSymmetry.checked)
     read_slider_and_render()
 })
 
@@ -67,6 +159,8 @@ window.addEventListener('load', () => {
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height - 100;
+    // set initial visibility for eccentricity control
+    eccentricityGroup.style.display = SpheroidType === 'sphere' ? 'none' : 'flex';
     read_slider_and_render()
 });
 window.addEventListener('resize', () => {
@@ -76,5 +170,5 @@ window.addEventListener('resize', () => {
     read_slider_and_render()
 });
 
-blocks = get_sphere(radius, cornerToggle.checked)
+blocks = get_sphere(radius, cornerUse.value, SpheroidType, eccentricity, ensureSymmetry?.checked)
 read_slider_and_render()
