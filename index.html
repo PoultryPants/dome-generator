@@ -159,16 +159,40 @@
   <body>
     <div id="slider-container">
       <div class="slider-group">
-        <label id="label-radius">Diameter: 13</label>
-        <input type="range" id="slider-radius" min="2" max="101" value="13" />
+        <label id="label-radius" title="Set the overall diameter of the dome."
+          >Diameter: 13</label
+        >
+        <input
+          type="range"
+          id="slider-radius"
+          min="2"
+          max="101"
+          value="13"
+          title="Drag to change the dome's diameter."
+        />
       </div>
 
       <div class="slider-group">
-        <label id="label-cut">Cut: 7</label>
-        <input type="range" id="slider-cut" min="1" max="7" value="7" />
+        <label
+          id="label-cut"
+          title="Show only the bottom layers up to this height."
+          >Cut: 7</label
+        >
+        <input
+          type="range"
+          id="slider-cut"
+          min="1"
+          max="7"
+          value="7"
+          title="Adjust to view a partial dome or cross-section."
+        />
       </div>
       <div class="slider-group" id="eccentricity-group">
-        <label id="label-eccentricity">Eccentricity: 0.00</label>
+        <label
+          id="label-eccentricity"
+          title="Change how stretched or flattened the spheroid is."
+          >Eccentricity: 0.00</label
+        >
         <input
           type="range"
           id="slider-eccentricity"
@@ -176,27 +200,71 @@
           max="99"
           value="0"
           step="1"
+          title="Increase for more oblate (flattened) or prolate (stretched) domes."
         />
       </div>
       <div class="slider-group">
-        <label>Spheroid Type:</label>
-        <select id="spheroid-type">
-          <option value="sphere">Sphere</option>
-          <option value="oblate">Oblate</option>
-          <option value="prolate">Prolate</option>
+        <label
+          title="Choose the basic shape: perfect sphere, oblate (flattened), or prolate (stretched)."
+          >Spheroid Type:</label
+        >
+        <select
+          id="spheroid-type"
+          title="Select the overall shape of the dome."
+        >
+          <option value="sphere" title="Perfect sphere.">Sphere</option>
+          <option value="oblate" title="Flattened at the poles.">
+            Oblate
+          </option>
+          <option
+            value="prolate"
+            title="Stretched at the poles."
+          >
+            Prolate
+          </option>
         </select>
       </div>
       <div class="slider-group">
-        <label>Corner stairs use:</label>
-        <select id="corner-use">
-          <option value="none">None</option>
-          <option value="legal" selected>Legal</option>
-          <option value="all">All</option>
+        <label title="Control how corner stairs are placed in the structure."
+          >Corner stairs use:</label
+        >
+        <select
+          id="corner-use"
+          title="Choose how corner stairs are used in the dome."
+        >
+          <option
+            value="none"
+            title="Never use corner stairs; only full blocks and regular stairs/slabs."
+          >
+            None
+          </option>
+          <option
+            value="legal"
+            selected
+            title="Use corner stairs only where they fit naturally and legally in Minecraft."
+          >
+            Legal
+          </option>
+          <option
+            value="all"
+            title="Use corner stairs wherever possible, even if not strictly legal in Minecraft."
+          >
+            All
+          </option>
         </select>
       </div>
       <div class="slider-group checkbox-group">
-        <input type="checkbox" id="ensure-symmetry" checked />
-        <label for="ensure-symmetry">Ensure symmetry</label>
+        <input
+          type="checkbox"
+          id="ensure-symmetry"
+          checked
+          title="Force the dome to be symmetric wherever possible."
+        />
+        <label
+          for="ensure-symmetry"
+          title="Force the dome to be symmetric wherever possible."
+          >Ensure symmetry</label
+        >
       </div>
     </div>
     <div id="app">
