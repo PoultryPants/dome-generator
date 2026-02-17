@@ -2,7 +2,7 @@
 import { IsometricCanvas } from './render.ts';
 import { get_sphere } from './sphere.ts';
 import { type BlockShape, type Coords3d} from './counter.ts'
-import * as nbt from "nbtify";
+import { write } from "nbtify";
 let canvas = document.querySelector<HTMLCanvasElement>('#canvas');
 if (!canvas) {
     throw new Error("Canvas element not found");
