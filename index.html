@@ -73,7 +73,7 @@
         justify-content: space-between;
         gap: 12px;
       }
-      .export-button {
+      #export-button {
         padding: 8px 12px;
         border: none;
         background: #5f0eb5;
@@ -81,6 +81,7 @@
         border-radius: 4px;
         cursor: pointer;
         font-weight: 600;
+        margin-left: auto;
       }
       .slider-group button {
         padding: 6px 10px;
@@ -214,7 +215,12 @@
           step="1"
           title="Negative = oblate (flattened), positive = prolate (stretched)."
         />
-        <button id="reset-eccentricity" title="Reset eccentricity to 0 (perfect sphere)">Reset</button>
+        <button
+          id="reset-eccentricity"
+          title="Reset eccentricity to 0 (perfect sphere)"
+        >
+          Reset
+        </button>
       </div>
       <div class="slider-group">
         <label title="Control how corner stairs are placed in the structure."
@@ -246,22 +252,10 @@
         </select>
       </div>
       <div class="slider-group checkbox-group">
-        <input
-          type="checkbox"
-          id="ensure-symmetry"
-          checked
-          title="Force the dome to be symmetric wherever possible."
-        />
-        <label
-          for="ensure-symmetry"
-          title="Force the dome to be symmetric wherever possible."
-          >Ensure symmetry</label
-        >
+        <input type="checkbox" id="ensure-symmetry" checked />
+        <label for="ensure-symmetry">Ensure symmetry</label>
+        <button id="export-button">Export NBT</button>
       </div>
-    </div>
-    <div id="app">
-      <canvas id="canvas"></canvas>
-    </div>
 
     <!-- Bottom-left footer link -->
     <div id="footer-link">

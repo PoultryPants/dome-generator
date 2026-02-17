@@ -24,6 +24,9 @@ const label_eccentricity = document.getElementById('label-eccentricity') as HTML
 
 const cornerUse = document.getElementById('corner-use') as HTMLSelectElement;
 const ensureSymmetry = document.getElementById('ensure-symmetry') as HTMLInputElement;
+
+const exportNBT = document.getElementById("export-nbt") as HTMLButtonElement;
+
 var blocks: Array<[BlockShape, Coords3d]> = []
 var radius: number = 13
 var cut: number = 7
@@ -94,6 +97,35 @@ function read_slider_and_render(){
     isometric_canvas.render(cut=cut);
 }
 
+function buildStructureNBT() {
+    const paletteMap = new Map<string, number>();
+    const palette: any[] = [];
+    const blockList: any[] = [];
+
+    for (const [blockShape, pos] of blocks) {
+        const blockName = blockShape.name ?? "minecraft:stone";
+
+        if (!paletteMap.has(blockName)) {
+            paletteMap.set(blockName, palette.length);
+            palette.push({ Name: blockName });
+        }
+
+        blockList.push({
+            pos: pos,
+            state: paletteMap.get(blockName)
+        });
+    }
+
+    return {
+        DataVersion: 3465, // 1.20.4 — can update later
+        size: [radius, radius, radius],
+        palette: palette,
+        blocks: blockList,
+        entities: []
+    };
+}
+
+
 slider_radius.addEventListener('input', () => {
     radius = Number(slider_radius.value);
 
@@ -153,6 +185,23 @@ ensureSymmetry?.addEventListener('change', () => {
     blocks = get_sphere(radius, cornerUse.value, eccentricity, ensureSymmetry.checked)
     read_slider_and_render()
 })
+
+exportNBT.addEventListener("click", async () => {
+    const structure = buildStructureNBT();
+
+    const binary = await write(structure);
+
+    const blob = new Blob([binary], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "dome.nbt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+});
+
 
 window.addEventListener('load', () => {
     const rect = canvas.getBoundingClientRect();
