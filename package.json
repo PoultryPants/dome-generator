@@ -13,5 +13,8 @@
     "gh-pages": "^6.3.0",
     "typescript": "~5.8.3",
     "vite": "^7.0.3"
+  },
+  "dependencies": {
+    "nbtify": "^2.2.0"
   }
 }

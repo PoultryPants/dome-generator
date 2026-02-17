@@ -82,6 +82,18 @@
         cursor: pointer;
         font-weight: 600;
       }
+      .slider-group button {
+        padding: 6px 10px;
+        border: none;
+        background: #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .slider-group button:hover {
+        background: #ccc;
+      }
 
       /* Modal overlay and dialog */
       #modal-overlay {
@@ -202,6 +214,7 @@
           step="1"
           title="Negative = oblate (flattened), positive = prolate (stretched)."
         />
+        <button id="reset-eccentricity" title="Reset eccentricity to 0 (perfect sphere)">Reset</button>
       </div>
       <div class="slider-group">
         <label title="Control how corner stairs are placed in the structure."

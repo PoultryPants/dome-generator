@@ -2,6 +2,7 @@
 import { IsometricCanvas } from './render.ts';
 import { get_sphere } from './sphere.ts';
 import { type BlockShape, type Coords3d} from './counter.ts'
+import * as nbt from "nbtify";
 let canvas = document.querySelector<HTMLCanvasElement>('#canvas');
 if (!canvas) {
     throw new Error("Canvas element not found");
@@ -17,6 +18,7 @@ const label_radius = document.getElementById('label-radius') as HTMLLabelElement
 const slider_cut = document.getElementById('slider-cut') as HTMLInputElement;
 const label_cut = document.getElementById('label-cut') as HTMLLabelElement;
 
+const resetEccentricity = document.getElementById('reset-eccentricity') as HTMLButtonElement;
 const slider_eccentricity = document.getElementById('slider-eccentricity') as HTMLInputElement;
 const label_eccentricity = document.getElementById('label-eccentricity') as HTMLLabelElement;
 
@@ -123,6 +125,21 @@ slider_eccentricity.addEventListener('input', () => {
     slider_cut.max = String(cut);
     slider_cut.value = String(cut);
     label_cut.textContent = `Cut: ${cut}`;
+    blocks = get_sphere(radius, cornerUse.value, eccentricity, ensureSymmetry?.checked);
+    read_slider_and_render();
+});
+
+resetEccentricity.addEventListener('click', () => {
+    eccentricity = 0; // default value
+
+    slider_eccentricity.value = "0";
+    label_eccentricity.textContent = `Eccentricity: 0.00`;
+
+    cut = computeCut(radius, eccentricity);
+    slider_cut.max = String(cut);
+    slider_cut.value = String(cut);
+    label_cut.textContent = `Cut: ${cut}`;
+
     blocks = get_sphere(radius, cornerUse.value, eccentricity, ensureSymmetry?.checked);
     read_slider_and_render();
 });
