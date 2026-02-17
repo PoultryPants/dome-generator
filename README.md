@@ -6,7 +6,7 @@ Try it online: https://poultrypants.github.io/dome-generator/
 
 1. **Set Diameter:** Use the Diameter slider to choose the dome’s size.
 2. **Adjust Cut:** The Cut slider lets you view only the lower layers, useful if you are trying to copy the design layer-by-layer.
-3. **Pick Spheroid Type:** Select Sphere, Oblate, or Prolate. For non-spheres, the Eccentricity slider appears to fine-tune the shape.
+3. **Adjust Eccentricity:** By default, Eccentricity is set to 0, making the shape a sphere. For Prolates, adjust the slider in the positive direction, stretching the poles of the shape. For Oblates, adjust the slider in the negative direction, squishing the poles of the shape.
 4. **Corner Stairs Use:** Choose how corner stairs are placed for different block arrangements. Modes:
    - **None:** Won't use any corner stairs, only normal stairs
    - **Legal:** Uses corner stairs only in places where you could place them in survival Minecraft, without using a debug stick or commands
