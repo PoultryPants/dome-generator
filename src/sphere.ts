@@ -139,24 +139,32 @@ function get2x2Submatrix(data: number[][], i: number, j: number): number[][] {
 }
 
 
-export function get_sphere(radius: number, use_corner: string | boolean, spheroidType: string = "sphere", eccentricity: number = 0, ensureSymmetry: boolean = false): Array<[BlockShape, Coords3d]> {
+export function get_sphere(
+    radius: number,
+    use_corner: string | boolean,
+    eccentricity: number = 0,
+    ensureSymmetry: boolean = false
+    ): Array<[BlockShape, Coords3d]> {
+
     const size = 2 * radius;
     const data: number[][] = [];
     
-    // Convert eccentricity from 0-99 range to 0-0.99
-    const e = eccentricity / 100;
-    
-    // Calculate the scaling factors based on spheroid type and eccentricity
+    const eRaw = eccentricity / 100;
+    const e = Math.max(-0.999, Math.min(0.999, eRaw));
+
     let zScale = 1;
-    if (spheroidType === "oblate" && e > 0) {
-        // Oblate: flattened at poles, bulging at equator
-        // z-axis is the polar axis (shorter)
-        zScale = Math.sqrt(1 - e * e);
-    } else if (spheroidType === "prolate" && e > 0) {
-        // Prolate: elongated along polar axis
-        // z-axis is the polar axis (longer)
+
+    if (e < 0) {
+        // oblate
+        const absE = Math.abs(e);
+        zScale = Math.sqrt(1 - absE * absE);
+    }
+    else if (e > 0) {
+        // prolate
         zScale = 1 / Math.sqrt(1 - e * e);
     }
+
+
     
     // Generate height data
     for (let i = 0; i < size; i++) {

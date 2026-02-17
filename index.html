@@ -196,33 +196,12 @@
         <input
           type="range"
           id="slider-eccentricity"
-          min="0"
-          max="99"
+          min="-99"
+          max="100"
           value="0"
           step="1"
-          title="Increase for more oblate (flattened) or prolate (stretched) domes."
+          title="Negative = oblate (flattened), positive = prolate (stretched)."
         />
-      </div>
-      <div class="slider-group">
-        <label
-          title="Choose the basic shape: perfect sphere, oblate (flattened), or prolate (stretched)."
-          >Spheroid Type:</label
-        >
-        <select
-          id="spheroid-type"
-          title="Select the overall shape of the dome."
-        >
-          <option value="sphere" title="Perfect sphere.">Sphere</option>
-          <option value="oblate" title="Flattened at the poles.">
-            Oblate
-          </option>
-          <option
-            value="prolate"
-            title="Stretched at the poles."
-          >
-            Prolate
-          </option>
-        </select>
       </div>
       <div class="slider-group">
         <label title="Control how corner stairs are placed in the structure."
